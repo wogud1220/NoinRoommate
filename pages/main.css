@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    height: 700px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo-header {
+    height: 60px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.alert {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.main {
+    padding: 20px;
+}
+
+.box {
+    width: 350px;
+    height: 120px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pharmacy {
+    margin-top: 20px;
+    background-color: #fdfd96;
+    grid-column: 1;
+    grid-row: 1;
+    text-align: center;
+}
+
+.bus {
+    margin-top: 20px;
+    background-color: #698ae8;
+    grid-column: 2;
+    grid-row: 1;
+    text-align: center;
+}
+
+.hospital {
+    background-color: #ffd1dc;
+    grid-column: 1;
+    grid-row: 2 / span 2;
+    text-align: center;
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.info {
+    background-color: #ffcc99;
+    grid-column: 2;
+    grid-row: 2;
+    text-align: center;
+}
+
+.ward {
+    background-color: #d3d3d3;
+    grid-column: 2;
+    grid-row: 3;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.box {
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-top: 1px solid #ccc;
+}
+
+.logo {
+    height: 50px;
+}
+
+.icons {
+    display: flex;
+    gap: 10px;
+}
+
+.magnifying {
+    width: 50px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.zoom {
+    height: 50px;
+    width: 50px;
+}
