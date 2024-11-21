@@ -78,15 +78,57 @@ body {
   grid-row: 1;
   text-align: center;
 }
-
+/* 
 .bus {
   margin-top: 20px;
   background-color: #698ae8;
   grid-column: 2;
   grid-row: 1;
   text-align: center;
+  display: flex; /* Flexbox를 사용하여 가로로 배치 
+  align-items: center; 
+  padding: 10px; 
 }
 
+.bus-logo {
+  width: 100px;
+  height: 100px;
+  margin-left: -130px; 
+}
+.bus-text {
+  font-size: 16px; 
+  text-align: center; 
+  padding-left: 20px;
+} */
+.box.bus {
+  margin-top: 20px;
+  background-color: #698ae8;
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+  display: flex; /* 가로 정렬 */
+  align-items: flex-start; /* 텍스트를 위쪽 정렬 */
+  padding: 10px;
+}
+
+.bus-link {
+  display: flex; /* 내부 요소 가로 배치 */
+  align-items: flex-start; /* 텍스트를 이미지의 상단에 정렬 */
+  text-decoration: none; /* 링크 스타일 제거 */
+  color: inherit; /* 부모 색상 상속 */
+  width: 100%; /* 부모 크기 채움 */
+}
+
+.bus-logo {
+  width: 100px;
+  height: 100px;
+  margin-left: -80px;
+}
+
+.bus-text {
+  font-size: 16px; /* 글씨 크기 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+}
 .hospital {
   background-color: #ffd1dc;
   grid-column: 1;
