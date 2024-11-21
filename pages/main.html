@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>병원 안내 메인 페이지</title>
     <link rel="stylesheet" href="main.css" />
+    <script src="main.js"></script>
   </head>
   <body>
     <div class="container">
@@ -15,7 +16,8 @@
           </a>
         </div>
         <div class="header-right">
-          <div class="alert">직원 호출 -> 소리</div>
+          <div class="alert" onclick="playSiren()">직원 호출</div>
+          <audio id="siren-sound" src="../src/siren.mp3"></audio>
         </div>
       </header>
 
@@ -88,6 +90,5 @@
         </div>
       </footer>
     </div>
-    <script src="main.js"></script>
   </body>
 </html>
