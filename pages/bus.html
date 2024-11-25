@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="main.css" />
 
     <script>
-      // HTML에 출력할 위치를 지정하는 요소를 추가
+      let busTimers = []; // 각 버스의 남은 시간을 저장하는 배열
+
       function fetchBusInfo() {
         var xhr = new XMLHttpRequest();
         var url =
@@ -16,26 +17,26 @@
           "?" +
           encodeURIComponent("serviceKey") +
           "=" +
-          "sC35JjZfctPCzMJKP3iPh37srVsdutf%2BGb6Urm%2F5qL1qk49bzck9hyxlIOZ40R4OxExCYEflABaCdJJ47HU%2BOA%3D%3D"; // 서비스 키
+          "sC35JjZfctPCzMJKP3iPh37srVsdutf%2BGb6Urm%2F5qL1qk49bzck9hyxlIOZ40R4OxExCYEflABaCdJJ47HU%2BOA%3D%3D";
         queryParams +=
-          "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1"); // 페이지 번호
+          "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1");
         queryParams +=
           "&" +
           encodeURIComponent("numOfRows") +
           "=" +
-          encodeURIComponent("10"); // 출력 개수
+          encodeURIComponent("10");
         queryParams +=
-          "&" + encodeURIComponent("_type") + "=" + encodeURIComponent("xml"); // 응답 타입(xml)
+          "&" + encodeURIComponent("_type") + "=" + encodeURIComponent("xml");
         queryParams +=
           "&" +
           encodeURIComponent("cityCode") +
           "=" +
-          encodeURIComponent("34010"); // 도시 코드(천안)
+          encodeURIComponent("34010");
         queryParams +=
           "&" +
           encodeURIComponent("nodeId") +
           "=" +
-          encodeURIComponent("CAB285000639"); // 정류소 ID
+          encodeURIComponent("CAB285000639");
 
         xhr.open("GET", url + queryParams);
         xhr.onreadystatechange = function () {
@@ -51,34 +52,43 @@
 
               if (items.length > 0) {
                 busInfoDiv.innerHTML = ""; // 기존 내용 초기화
-                Array.from(items).forEach((item) => {
+                busTimers = []; // 타이머 데이터 초기화
+
+                Array.from(items).forEach((item, index) => {
                   const routeNo =
                     item.getElementsByTagName("routeno")[0]?.textContent ||
-                    "버스 번호 없음"; // 버스 번호
+                    "버스 번호 없음";
                   const arrprevstationcnt =
                     item.getElementsByTagName("arrprevstationcnt")[0]
-                      ?.textContent || "N/A"; // 도착 예정 정류소 수
-                  const arrTime =
-                    item.getElementsByTagName("arrtime")[0]?.textContent ||
-                    "N/A"; // 도착 예정 시간
+                      ?.textContent || "N/A";
+                  const arrTime = parseInt(
+                    item.getElementsByTagName("arrtime")[0]?.textContent || "0"
+                  );
 
-                  const minutes = Math.floor(arrTime / 60);
-                  const seconds = arrTime % 60;
+                  // 도착 예정 시간을 저장
+                  busTimers.push({
+                    id: index,
+                    routeNo,
+                    arrprevstationcnt,
+                    remainingTime: arrTime,
+                  });
 
+                  // 초기 화면 출력
                   busInfoDiv.innerHTML += `
-                <div>
-                  <p>버스 번호: ${routeNo}</p>
-                  <p>도착 예정 정류소 수: ${arrprevstationcnt} 전</p>
-                  <p>도착 예정 시간: ${minutes}분 ${seconds}초 후</p>
-                </div>
-                <hr>
-              `;
+              <div id="bus-${index}">
+                <p>버스 번호: ${routeNo}</p>
+                <p>도착 예정 정류소 수: ${arrprevstationcnt} 전</p>
+                <p>도착 예정 시간: <span id="time-${index}">${Math.floor(
+                    arrTime / 60
+                  )}분 ${arrTime % 60}초</span> 후</p>
+              </div>
+              <hr>
+            `;
                 });
               } else {
                 busInfoDiv.innerHTML = "<p>도착 예정인 버스가 없습니다.</p>";
               }
             } else {
-              // 오류 발생 시 화면에 표시
               busInfoDiv.innerHTML = `<p>오류 발생! 상태 코드: ${this.status}</p>`;
             }
           }
@@ -86,11 +96,36 @@
 
         xhr.send("");
       }
+      function updateTimers() {
+        let shouldRefresh = false; // API 호출 여부 플래그
 
-      // 10초마다 fetchBusInfo 호출
-      setInterval(fetchBusInfo, 10000);
+        busTimers.forEach((bus) => {
+          if (bus.remainingTime > 0) {
+            bus.remainingTime -= 1; // 1초 감소
+            const minutes = Math.floor(bus.remainingTime / 60);
+            const seconds = bus.remainingTime % 60;
+            const timeElement = document.getElementById(`time-${bus.id}`);
+            if (timeElement) {
+              timeElement.textContent = `${minutes}분 ${seconds}초`;
+            }
+          } else if (bus.remainingTime === 0) {
+            shouldRefresh = true; // 시간이 0초가 된 항목이 있으면 API 호출 플래그 설정
+          }
+        });
 
-      // 초기 로딩 시 한 번 호출
+        // 시간이 0초가 된 항목이 있을 경우 API 재호출
+        if (shouldRefresh) {
+          fetchBusInfo();
+        }
+      }
+
+      // 1초마다 남은 시간 업데이트
+      setInterval(updateTimers, 1000);
+
+      // 1분마다 API 호출
+      setInterval(fetchBusInfo, 60000);
+
+      // 초기 실행
       fetchBusInfo();
     </script>
   </head>
@@ -107,7 +142,8 @@
           <audio id="siren-sound" src="../src/siren.mp3"></audio>
         </div>
       </header>
-      <h1>실시간 버스 도착 정보</h1>
+      <img src="../src/bus_station.png" alt="Bus Station" class="bus-station" />
+      <h2>실시간 버스 도착 정보 (오승빌라 방면)</h2>
       <div id="busInfo">버스 정보를 불러오는 중...</div>
 
       <footer class="footer">
